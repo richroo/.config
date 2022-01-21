@@ -262,6 +262,13 @@ local function get_python_path(workspace)
     return path.join(venv, 'bin', 'python')
   end
 
+  -- Find and use virtualenv via tox in workspace directory.
+  local match = vim.fn.glob(path.join(workspace, 'tox.ini'))
+  if match ~= '' then
+    local venv = vim.fn.trim(vim.fn.system('pwd'))
+    return path.join(venv, '.tox', 'dev', 'bin', 'python')
+  end
+
   -- Fallback to system Python.
   return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
 end
