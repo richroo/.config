@@ -23,6 +23,7 @@ abbr -a senv "source (poetry env info -p)/bin/activate.fish"
 abbr -a vim "nvim"
 abbr -a gs "git status"
 abbr -a config '/usr/bin/git --git-dir=$HOME/.config/ --work-tree=$HOME' 
+abbr -a ff "fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' | xargs nvim"
 
 # Evaluate direnv hooks
 eval (direnv hook fish)

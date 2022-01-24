@@ -19,6 +19,7 @@ require('packer').startup(function()
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'ludovicchabant/vim-gutentags' -- Automatic tags management
+  use 'christoomey/vim-tmux-navigator' -- Shared movement between nvim and tmux
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
@@ -39,6 +40,9 @@ require('packer').startup(function()
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
 end)
 
+--Two row command bar
+vim.o.cmdheight = 2
+
 --Set highlight on search
 vim.o.hlsearch = false
 
@@ -48,6 +52,9 @@ vim.wo.number = true
 
 --Enable mouse mode
 vim.o.mouse = 'a'
+
+--Set scrolloff to a scrollable distance
+vim.o.scrolloff = 40
 
 --Enable break indent
 vim.o.breakindent = true
