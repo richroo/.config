@@ -4,6 +4,9 @@ set -x GOPATH ~/go
 set -x GOROOT /usr/local/opt/go/libexec
 set -x PATH $PATH $GOROOT/bin $GOPATH/bin ~/.cargo/bin
 set -x PATH "/Users/richard/.local/bin:$PATH"
+set -x http_proxy "http://localhost:8888"
+set -x https_proxy "http://localhost:8888"
+set -x no_proxy "localhost,127.0.0.1,0.0.0.0"
 
 if command -v exa > /dev/null
     abbr -a l 'exa'
@@ -50,3 +53,6 @@ end
 
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
+
+# Created by `pipx` on 2022-01-21 18:48:54
+set PATH $PATH /Users/rli435/.local/bin
