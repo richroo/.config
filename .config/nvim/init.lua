@@ -40,6 +40,14 @@ require('packer').startup(function()
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
 end)
 
+
+--Smart tabs
+vim.o.smarttab = true
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.tabstop = 8
+vim.opt.expandtab = true
+
 --Two row command bar
 vim.o.cmdheight = 2
 
