@@ -142,6 +142,15 @@ require('telescope').setup {
       },
     },
   },
+  pickers = {
+    buffers = {
+      mappings = {
+        i = {
+          ['<C-d>'] = "delete_buffer",
+        }
+      }
+    }
+  }
 }
 
 -- Enable telescope fzf native
