@@ -17,7 +17,7 @@ require('packer').startup(function()
   use 'wbthomason/packer.nvim' -- Package manager
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  use {'numToStr/Comment.nvim', cond = function() return false end} -- "gc" to comment visual regions/lines
   use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   use 'christoomey/vim-tmux-navigator' -- Shared movement between nvim and tmux
   -- UI to select things (files, grep results, open buffers...)
@@ -65,7 +65,7 @@ vim.wo.number = true
 vim.o.mouse = 'a'
 
 --Set scrolloff to a scrollable distance
-vim.o.scrolloff = 40
+vim.o.scrolloff = 20
 
 --Enable break indent
 vim.o.breakindent = true
@@ -98,9 +98,6 @@ require('lualine').setup {
   },
 }
 
---Set smoothscroll
-require('neoscroll').setup()
-
 --Enable Comment.nvim
 require('Comment').setup()
 
@@ -122,13 +119,16 @@ vim.cmd [[
 ]]
 
 --Close current buffer without closing window
-vim.api.nvim_set_keymap('n', '<leader>q', ':bp | sp | bn | bd', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>q', ':bp<bar>sp<bar>bn<bar>bd<CR>', { noremap = true, silent = true })
 
 --Map blankline
 vim.g.indent_blankline_char = '┊'
 vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
+
+--Set smoothscroll
+require('neoscroll').setup()
 
 -- Gitsigns
 require('gitsigns').setup {
@@ -245,7 +245,7 @@ require('nvim-treesitter.configs').setup {
 vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>l', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
