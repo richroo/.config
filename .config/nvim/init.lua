@@ -26,6 +26,8 @@ require('packer').startup(function()
   use { 'nvim-telescope/telescope-file-browser.nvim' }
   use 'sainnhe/gruvbox-material'
   use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } } -- Fancier statusline
+  -- Smooth scrolling
+  use 'karb94/neoscroll.nvim'
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
@@ -83,7 +85,7 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 vim.cmd [[colorscheme gruvbox-material]]
 
--- Set completeopt to have a better completion experience
+--Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
 --Set statusbar
@@ -95,6 +97,9 @@ require('lualine').setup {
     section_separators = '',
   },
 }
+
+--Set smoothscroll
+require('neoscroll').setup()
 
 --Enable Comment.nvim
 require('Comment').setup()
@@ -115,6 +120,9 @@ vim.cmd [[
     autocmd TextYankPost * silent! lua vim.highlight.on_yank()
   augroup end
 ]]
+
+--Close current buffer without closing window
+vim.api.nvim_set_keymap('n', '<leader>q', ':bp | sp | bn | bd', { noremap = true, silent = true })
 
 --Map blankline
 vim.g.indent_blankline_char = '┊'
