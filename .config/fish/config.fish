@@ -29,7 +29,7 @@ abbr -a config '/usr/bin/git --git-dir=$HOME/.config/ --work-tree=$HOME'
 abbr -a ff "fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' | xargs nvim"
 
 # Evaluate direnv hooks
-eval (direnv hook fish)
+direnv hook fish | source
 
 function fish_prompt
     set_color brblack
