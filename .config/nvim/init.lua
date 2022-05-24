@@ -44,6 +44,9 @@ require('packer').startup(function()
 end)
 
 
+--System clipboard
+vim.o.clipboard = "unnamedplus"
+
 --Smart tabs
 vim.o.smarttab = true
 vim.o.shiftwidth = 4
