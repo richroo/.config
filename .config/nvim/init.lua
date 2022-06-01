@@ -134,15 +134,7 @@ vim.g.indent_blankline_show_trailing_blankline_indent = false
 require('neoscroll').setup()
 
 -- Gitsigns
-require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  },
-}
+require('gitsigns').setup()
 
 -- Telescope
 require('telescope').setup {
