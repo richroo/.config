@@ -14,6 +14,9 @@ vim.cmd [[
 
 local use = require('packer').use
 require('packer').startup(function()
+  -- Transparent UI
+  use 'xiyaowong/nvim-transparent'
+  --
   use 'wbthomason/packer.nvim' -- Package manager
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
@@ -130,7 +133,12 @@ vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 
---Set smoothscroll
+-- Transparent
+require('transparent').setup({
+  enable = true
+})
+
+-- Set smoothscroll
 require('neoscroll').setup()
 
 -- Gitsigns
