@@ -4,9 +4,10 @@ set -x GOPATH ~/go
 set -x GOROOT /usr/local/opt/go/libexec
 set -x PATH $PATH $GOROOT/bin $GOPATH/bin ~/.cargo/bin
 set -x PATH "/Users/richard/.local/bin:$PATH"
-set -x http_proxy "http://localhost:8888"
-set -x https_proxy "http://localhost:8888"
-set -x no_proxy "localhost,127.0.0.1,0.0.0.0"
+set -x https_proxy "127.0.0.1:8888"
+set -x HTTPS_PROXY "127.0.0.1:8888"
+set -x http_proxy "127.0.0.1:8888"
+set -x HTTP_PROXY "127.0.0.1:8888"
 
 if command -v exa > /dev/null
     abbr -a l 'exa'

@@ -2,8 +2,14 @@ env:
   TERM: xterm-256color
 
 window:
-  decorations: full
+  decorations: buttonless 
   startup_mode: Windowed
+
+  padding:
+    x: 10
+    y: 10
+
+  opacity: 0.9
 
 scrolling:
   history: 10000
