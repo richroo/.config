@@ -1,0 +1,281 @@
+ bet nocompatible
+
+syntax on
+filetype plugin indent on
+
+set autoindent
+set autoread
+set smarttab
+set ruler
+set relativenumber
+set number
+set noerrorbells
+set clipboard+=unnamedplus
+set hidden
+set noshowmode
+set termguicolors
+
+" Use wide tabs
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set noexpandtab
+
+" Completion
+" Better completion
+" menuone: popup even when there's only one match
+" noinsert: Do not insert text until a selection is made
+" noselect: Do not select, force user to select one from the menu
+set completeopt=menuone,noinsert,noselect
+" Better display for messages
+set cmdheight=2
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" Sane Splits
+set splitright
+set splitbelow
+
+" Proper search
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
+set nohlsearch
+
+" Search results centered please
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+" =============================================================================
+" # GUI settings
+" =============================================================================
+set guioptions-=T " Remove toolbar
+set vb t_vb= " No more beeps
+set backspace=2 " Backspace over newlines
+set nofoldenable
+set ttyfast
+" https://github.com/vim/vim/issues/1735#issuecomment-383353563
+set lazyredraw
+set synmaxcol=500
+set laststatus=2
+set relativenumber " Relative line numbers
+set number " Also show current absolute line
+set diffopt+=iwhite " No whitespace in vimdiff
+" Make diffing better: https://vimways.org/2018/the-power-of-diff/
+set diffopt+=algorithm:patience
+set diffopt+=indent-heuristic
+set showcmd " Show (partial) command in status line.
+set mouse=a " Enable mouse usage (all modes) in terminals
+set shortmess+=c " don't give |ins-completion-menu| messages.
+set scrolloff=2
+
+" Show those damn hidden characters
+" Verbose: set listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
+set listchars=nbsp:¬,extends:»,precedes:«,trail:•
+" Telescope Shortcuts
+nnoremap <space>e <cmd>Telescope find_files<cr>
+nnoremap <space>g <cmd>Telescope live_grep<cr>
+nnoremap <space>b <cmd>Telescope buffers<cr>
+nnoremap <space>h <cmd>Telescope help_tags<cr>
+
+" Tree Shortcuts
+nnoremap <space>t <cmd>NvimTreeToggle<cr>
+
+command Fjson execute "%!jq --indent 2 ."
+
+" Black Python files on save
+let g:black_virtualenv="~/.local/share/black/venv/"
+autocmd BufWritePre *.py execute ':Black'
+" autocmd BufWritePre *.json execute ':Fjson'
+
+call plug#begin()
+
+" Explorer
+Plug 'kyazdani42/nvim-tree.lua'
+
+" Fuzzy Finder
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+" Theme
+Plug 'sainnhe/gruvbox-material'
+Plug 'itchyny/lightline.vim'
+
+" Devicons
+Plug 'kyazdani42/nvim-web-devicons'
+
+" Syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'psf/black', { 'branch': 'stable' }
+Plug 'mechatroner/rainbow_csv'
+
+" Semantic language support
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
+Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
+Plug 'hrsh7th/cmp-path', {'branch': 'main'}
+Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
+Plug 'ray-x/lsp_signature.nvim'
+
+" Only because nvim-cmp _requires_ snippets
+Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
+Plug 'hrsh7th/vim-vsnip'
+
+call plug#end()
+
+colorscheme gruvbox-material
+
+lua << END
+require'nvim-treesitter.configs'.setup {
+	ensure_installed = {"json", "python", "rust", "go", "yaml", "toml"},
+	highlight = { enable = true }
+}
+require'nvim-tree'.setup{}
+require'telescope'.setup { defaults = { file_ignore_patterns = {"__pycache__"} } }
+
+-- LSP configuration
+local cmp = require'cmp'
+
+local lspconfig = require'lspconfig'
+cmp.setup({
+  snippet = {
+    -- REQUIRED by nvim-cmp. get rid of it once we can
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = {
+    -- Tab immediately completes. C-n/C-p to select.
+    ['<Tab>'] = cmp.mapping.confirm({ select = true })
+  },
+  sources = cmp.config.sources({
+    -- TODO: currently snippets from lsp end up getting prioritized -- stop that!
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'path' },
+  }),
+  experimental = {
+    ghost_text = true,
+  },
+})
+
+-- Enable completing paths in :
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' }
+  })
+})
+
+-- Setup lspconfig.
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+  -- Get signatures (and _only_ signatures) when in argument lists.
+  require "lsp_signature".on_attach({
+    doc_lines = 0,
+    handler_opts = {
+      border = "none"
+    },
+  })
+end
+
+local util = require('lspconfig/util')
+
+local path = util.path
+
+local function get_python_path(workspace)
+  -- Use activated virtualenv.
+  if vim.env.VIRTUAL_ENV then
+    return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
+  end
+
+  -- Find and use virtualenv via poetry in workspace directory.
+  local match = vim.fn.glob(path.join(workspace, 'poetry.lock'))
+  if match ~= '' then
+    local venv = vim.fn.trim(vim.fn.system('poetry env info -p'))
+    return path.join(venv, 'bin', 'python')
+  end
+
+  -- Fallback to system Python.
+  return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+end
+
+require'lspconfig'.pyright.setup {
+    on_attach = function()
+        require'lsp_signature'.on_attach {
+            hint_enable = false,
+        }
+    end,
+    on_init = function(client)
+        client.config.settings.python.pythonPath = get_python_path(client.config.root_dir)
+    end
+}
+
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true,
+      },
+    },
+  },
+  capabilities = capabilities,
+}
+
+lspconfig.pyright.setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  before_init = function(_, config)
+    config.settings.python.pythonPath = get_python_path(config.root_dir)
+  end
+}
+
+lspconfig.tsserver.setup {}
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = true,
+    signs = true,
+    update_in_insert = true,
+  }
+)
+END
+
+" Enable type inlay hints
+autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }

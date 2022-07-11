@@ -6,10 +6,8 @@ window:
   startup_mode: Windowed
 
   padding:
-    x: 10
-    y: 10
-
-  opacity: 0.9
+    x: 0
+    y: 0
 
 scrolling:
   history: 10000
@@ -21,7 +19,7 @@ draw_bold_text_with_bright_colors: true
 
 font:
   normal:
-    family: "NotoSansMono Nerd Font"
+    family: "Fira Code Light"
   size: 14
 
 # The definition of color schemes.
