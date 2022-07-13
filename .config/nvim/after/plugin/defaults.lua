@@ -1,11 +1,9 @@
-local api = vim.api
-local g = vim.g
 local opt = vim.opt
 local cmd = vim.cmd
 
 
 opt.termguicolors = true -- Enable colors in terminal
-opt.hlsearch = true -- Set highlight on search
+opt.hlsearch = false -- Set off highlight on search
 opt.number = true -- Make line numbers default
 opt.relativenumber = true -- Make relative number default
 opt.mouse = "a" -- Enable mouse mode
@@ -46,9 +44,6 @@ cmd [[
     autocmd TextYankPost * silent! lua vim.highlight.on_yank()
   augroup end
 ]]
-
--- go to previous/next line with h,l,left arrow and right arrow when cursor reaches end/beginning of line
-opt.whichwrap:append "<>[]hl"
 
 -- Treesitter based folding
 cmd [[
