@@ -23,7 +23,6 @@ require('packer').startup(function()
   -- "gc" to comment visual regions/lines
   use {
     "numToStr/Comment.nvim",
-    cond = function() return false end,
     config = function()
       require("Comment").setup()
     end
@@ -48,6 +47,15 @@ require('packer').startup(function()
           enable_default_keybindings = true,
         }
       })
+    end
+  }
+
+  -- Smooth scrolling
+  use {
+    "declancm/cinnamon.nvim",
+    event = { "BufRead", "BufNewFile" },
+    config = function()
+      require("cinnamon").setup()
     end
   }
 
@@ -76,6 +84,16 @@ require('packer').startup(function()
     end
   }
 
+  -- Better diagnostics
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup()
+    end
+  }
+
+  use { "p00f/nvim-ts-rainbow" }
   use {
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -113,6 +131,7 @@ require('packer').startup(function()
   use { "L3MON4D3/LuaSnip" }
   use { "hrsh7th/nvim-cmp" } -- Autocompletion plugin
   use { "hrsh7th/cmp-nvim-lsp" }
+  use { "hrsh7th/cmp-path"}
   use { "saadparwaiz1/cmp_luasnip" }
   -- Auto pairs brackets and other symbols
   use {
